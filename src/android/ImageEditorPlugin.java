@@ -26,7 +26,7 @@ public class ImageEditorPlugin extends CordovaPlugin {
             String sourceTypeString = args.getString(0);
             cordova.setActivityResultCallback(this); //makes this class able to handle the startActivityForResult result
 
-            if (sourceTypeString.equals("source_gallery_camera")){
+            if (sourceTypeString.equals("camera") || sourceTypeString.equals("gallery")){
                 String path = args.getString(1);
                 onPhotoTaken(path);
 

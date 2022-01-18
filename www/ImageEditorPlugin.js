@@ -22,7 +22,7 @@ exports.editImageFromGallery = function (success, error) {
         cameraDefaultSettings.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
 
         navigator.camera.getPicture(function(imagePath) {
-            exec(success, error, 'ImageEditorPlugin', 'editImage', ['source_gallery_camera', imagePath]);
+            exec(success, error, 'ImageEditorPlugin', 'editImage', ['gallery', imagePath]);
         }, function (errorMessage) {
             error(errorMessage)
         }, cameraDefaultSettings);
@@ -37,7 +37,7 @@ exports.editImageFromCamera = function (success, error) {
         cameraDefaultSettings.sourceType = Camera.PictureSourceType.CAMERA;
 
         navigator.camera.getPicture(function(imagePath) {
-            exec(success, error, 'ImageEditorPlugin', 'editImage', ['source_gallery_camera', imagePath]);
+            exec(success, error, 'ImageEditorPlugin', 'editImage', ['camera', imagePath]);
         }, function (errorMessage) {
             error(errorMessage)
         }, cameraDefaultSettings);

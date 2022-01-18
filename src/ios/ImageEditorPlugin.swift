@@ -1,5 +1,4 @@
 import UIKit
-import OSPhotoEditor
 
 @objc(ImageEditorPlugin) class ImageEditorPlugin : CDVPlugin {
     
@@ -8,27 +7,19 @@ import OSPhotoEditor
     
     
     @objc(editImage:)
-    
     func editImage(_ command: CDVInvokedUrlCommand) {
         self.callbackId = command.callbackId;
         
         var sourceType = UIImagePickerController.SourceType.photoLibrary;
         let sourceTypeString = command.arguments[0] as? String;
-        if ( sourceTypeString == "sourcetype" ){
-            if (command.arguments[1] as? String == "camera"){
-                sourceType = .camera;
-            }
+        if ( sourceTypeString == "camera" || sourceTypeString == "gallery"){
             
-            let picker = UIImagePickerController()
-            picker.delegate = self
-            picker.sourceType = sourceType
+            var imagePath = command.arguments[1] as? String ?? "";
+            imagePath = imagePath.replacingOccurrences(of: "file:///", with: "");
             
-            self.viewController.present(picker, animated: true,  completion: {
-                //                pluginResult = CDVPluginResult(
-                //                    status: CDVCommandStatus_OK,
-                //                    messageAs: ""
-                //                )
-            })
+            let image = UIImage.init(contentsOfFile: imagePath)
+            
+            presentImageEditorViewController(image: image!)
             
         } else if (sourceTypeString == "base64" ) {
             let strBase64 = command.arguments[1] as? String ?? "";
@@ -66,9 +57,9 @@ import OSPhotoEditor
         //photoEditor.colors = [.red, .blue, .green]
         
         //Stickers that the user will choose from to add on the image
-        /*for i in 0...10 {
+        for i in 0...10 {
             photoEditor.stickers.append(UIImage(named: i.description )!)
-        }*/
+        }
         
         //To hide controls - array of enum control
         //photoEditor.hiddenControls = [.crop, .draw, .share]
@@ -105,7 +96,7 @@ extension ImageEditorPlugin: UIImagePickerControllerDelegate, UINavigationContro
      func imagePickerController(_ picker: UIImagePickerController,
                                        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
+         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
             picker.dismiss(animated: true, completion: nil)
             return
         }
